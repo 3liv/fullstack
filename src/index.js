@@ -9,6 +9,7 @@ import helpers from 'rijs.helpers'
 import precss from 'rijs.precss'
 import resdir from 'rijs.resdir'
 import serve from 'rijs.serve'
+import redis from 'rijs.redis'
 import needs from 'rijs.needs'
 import sync from 'rijs.sync'
 import core from 'rijs.core'
@@ -27,6 +28,7 @@ export default function create(opts){
   data(ripple)           // register data types
   css(ripple)            // register css types
   fn(ripple)             // register fn types
+  redis(ripple, opts)    // add redis cache
   helpers(ripple)        // expose helper functions and constants
   components(ripple)     // invoke web components, fn.call(<el>, data)
   needs(ripple)          // define default attrs for components
