@@ -42,6 +42,7 @@
     "rijs.precss": "*",
     "rijs.prehtml": "*",
     "rijs.reactive": "*",
+    "rijs.redis": "github:3liv/rijs.redis",
     "rijs.resdir": "*",
     "rijs.serve": "*",
     "rijs.sessions": "*",

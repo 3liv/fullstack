@@ -77,7 +77,6 @@ var _client = require('utilise/client');
 
 var _client2 = _interopRequireDefault(_client);
 
-/* istanbul ignore next */
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _client2.default && !window.ripple && create();
@@ -90,6 +89,7 @@ function create(opts) {
   (0, _rijs30.default)(ripple); // register data types
   (0, _rijs32.default)(ripple); // register css types
   (0, _rijs34.default)(ripple); // register fn types
+  redis(ripple, opts); // add redis cache
   (0, _rijs16.default)(ripple); // expose helper functions and constants
   (0, _rijs4.default)(ripple); // invoke web components, fn.call(<el>, data)
   (0, _rijs24.default)(ripple); // define default attrs for components

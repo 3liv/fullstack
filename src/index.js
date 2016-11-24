@@ -27,6 +27,7 @@ export default function create(opts){
   data(ripple)           // register data types
   css(ripple)            // register css types
   fn(ripple)             // register fn types
+  redis(ripple, opts)    // add redis cache
   helpers(ripple)        // expose helper functions and constants
   components(ripple)     // invoke web components, fn.call(<el>, data)
   needs(ripple)          // define default attrs for components
