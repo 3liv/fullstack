@@ -11,12 +11,17 @@
   "scripts": {
     "babel": "babel src -d dist",
     "build": "npm run clean && npm run babel && npm run ignore && npm run build:pure && npm run bundle && npm run minify && npm run gzip",
+
     "build:pure": "npm run bundle:pure && npm run minify:pure",
-    "bundle": "sh -c 'echo \"require(\\'utilise\\');$(cat dist/index.js)\" | browserify - -o dist/ripple.js -g ./clientify -i socket.io -i mysql -i jsondiffpatch -i rijs.hypermedia -i colors'",
-    "bundle:pure": "browserify dist/index.js -o dist/ripple.pure.js -g ./purify -i socket.io -i mysql -i jsondiffpatch -i socket.io-client -i **/utilise/**/*.js -i rijs.hypermedia --no-builtins -i colors -i utilise",
+
+    "bundle": "sh -c echo require\\(\\'utilise\\'\\);cat dist/index.js | cat | browserify - -o dist/ripple.js -i rijs.sessions -i rijs.resdir -i rijs.serve -i rijs.redis -i rijs.pages -i express -i bufferutil -i utf-8-validate -g ./clientify.js -i mysql -i rijs.hypermedia -i colors",
+
+    "bundle:pure": "browserify dist/index.js -o dist/ripple.pure.js -g ./purify -i socket.io -i mysql -i jsondiffpatch -i socket.io-client -i **/utilise/**/*.js -i rijs.hypermedia --no-builtins -i colors -i utilise -i rijs.sessions -i rijs.resdir -i rijs.serve -i rijs.pages -i rijs.redis",
+
     "clean": "rm -rf dist && mkdir dist",
     "gzip": "gzip -c dist/ripple.min.js > dist/ripple.min.js.gz && gzip -c dist/ripple.pure.min.js > dist/ripple.pure.min.js.gz",
-    "ignore": "find ./dist -type f -exec sed -i \"s/function _interopRequire/\\/* istanbul ignore next *\\/\\nfunction _interopRequire/g\" {} ;",
+    "ignore": "find ./dist -type f -exec sed -i \"s/function _interopRequire/\\/* istanbul ignore next *\\/\\nfunction _interopRequire/g\" {} \\;",
+
     "minify": "uglifyjs dist/ripple.js -m -c keep_fargs=false -o dist/ripple.min.js --screw-ie8",
     "minify:pure": "uglifyjs dist/ripple.pure.js -m -c keep_fargs=false -o dist/ripple.pure.min.js --screw-ie8",
     "version": "npm run build && git add -A",
@@ -29,7 +34,7 @@
     "rijs.core": "*",
     "rijs.css": "*",
     "rijs.data": "*",
-    "rijs.db": "*",
+    "rijs.db": "github:3liv/rijs.db",
     "rijs.delay": "*",
     "rijs.features": "*",
     "rijs.fn": "*",
@@ -38,14 +43,14 @@
     "rijs.hypermedia": "*",
     "rijs.mysql": "*",
     "rijs.needs": "*",
-    "rijs.offline": "*",
+    "rijs.offline": "file:///Users/aliversi/Development/ripple/offline",
     "rijs.precss": "*",
     "rijs.prehtml": "*",
     "rijs.reactive": "*",
     "rijs.redis": "github:3liv/rijs.redis",
-    "rijs.resdir": "*",
-    "rijs.serve": "*",
-    "rijs.sessions": "*",
+    "rijs.resdir": "^0.1.7",
+    "rijs.serve": "file:///Users/aliversi/Development/ripple/serve",
+    "rijs.sessions": "0.0.6",
     "rijs.shadow": "*",
     "rijs.singleton": "*",
     "rijs.sync": "*",

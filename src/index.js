@@ -9,6 +9,7 @@ import helpers from 'rijs.helpers'
 import precss from 'rijs.precss'
 import resdir from 'rijs.resdir'
 import serve from 'rijs.serve'
+import pages from 'rijs.pages'
 import redis from 'rijs.redis'
 import needs from 'rijs.needs'
 import sync from 'rijs.sync'
@@ -28,12 +29,13 @@ export default function create(opts){
   data(ripple)           // register data types
   css(ripple)            // register css types
   fn(ripple)             // register fn types
-  redis(ripple, opts)    // add redis cache
   helpers(ripple)        // expose helper functions and constants
+  redis(ripple, opts)    // add redis cache
   components(ripple)     // invoke web components, fn.call(<el>, data)
   needs(ripple)          // define default attrs for components
   precss(ripple)         // preapplies scoped css 
   serve(ripple, opts)    // serve client libraries
+  pages(ripple, opts)    // serve pages directory
   offline(ripple)        // loads/saves from/to localstorage
   sync(ripple, opts)     // syncs resources between server/client
   backpressure(ripple)   // restricts broadcast to clients based on need
