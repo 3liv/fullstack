@@ -21,7 +21,9 @@ import client from 'utilise/client'
 
 client && !window.ripple && create()
 
-export default function create(opts){
+module.exports = create
+
+function create(opts){
   var ripple = core()    // empty base collection of resources
  
   // enrich..
@@ -34,11 +36,11 @@ export default function create(opts){
   components(ripple)     // invoke web components, fn.call(<el>, data)
   needs(ripple)          // define default attrs for components
   precss(ripple)         // preapplies scoped css 
-  serve(ripple, opts)    // serve client libraries
-  pages(ripple, opts)    // serve pages directory
   offline(ripple)        // loads/saves from/to localstorage
-  sync(ripple, opts)     // syncs resources between server/client
+  sync(ripple, opts)     // syncs resources between server/client  
   backpressure(ripple)   // restricts broadcast to clients based on need
+  serve(ripple, opts)    // serve client libraries
+  pages(ripple, opts)    // serve pages directory 
   features(ripple)       // extend components with features
   versioned(ripple)      // versioning info and time travel
   sessions(ripple, opts) // populates sessionid on each connection
