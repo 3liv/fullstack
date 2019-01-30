@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@3liv/rijs.components": "^3.1.16",
+    "@3liv/rijs.sync": "^2.3.5",
     "rijs.core": "^1.2.6",
     "rijs.css": "^1.2.4",
     "rijs.data": "^2.2.4",
@@ -36,7 +37,6 @@
     "rijs.sessions": "^1.1.2",
     "rijs.shadow": "*",
     "rijs.singleton": "^1.0.0",
-    "rijs.sync": "^2.3.5",
     "utilise": "^2.3.8"
   },
   "devDependencies": {

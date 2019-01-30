@@ -10,8 +10,8 @@ function create(opts){
   require('rijs.data')(ripple, opts)
   require('rijs.css')(ripple, opts)
   require('rijs.fn')(ripple, opts)
-  require('rijs.sync')(ripple, opts)
-  require('rijs.components')(ripple, opts)
+  require('@3liv/rijs.sync')(ripple, opts)
+  require('@3liv/rijs.components')(ripple, opts)
 
   if (!client) {
     const { dirname, resolve } = require('path')

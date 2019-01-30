@@ -1,5 +1,7 @@
-var rijs = (function () {
+var rijs = (function (define) {
 	'use strict';
+
+	define = define && define.hasOwnProperty('default') ? define['default'] : define;
 
 	function commonjsRequire () {
 		throw new Error('Dynamic requires are not currently supported by rollup-plugin-commonjs');
@@ -1218,116 +1220,13 @@ var rijs = (function () {
 	  return output
 	};
 
-	function __async(g){return new Promise(function(s,j){function c(a,x){try{var r=g[x?"throw":"next"](a);}catch(e){j(e);return}r.done?s(r.value):Promise.resolve(r.value).then(c,d);}function d(e){c(e,1);}c();})}
-
 	var ready = function ready(fn){
 	  return document.body ? fn() : document.addEventListener('DOMContentLoaded', fn.bind(this))
 	};
 
-	var cssscope = function scope(styles, prefix) {
-	  return styles
-	    .replace(/^(?!.*:host)([^@%\n]*){/gim, function($1){ return prefix+' '+$1 })       // ... {                 -> tag ... {
-	    .replace(/^(?!.*:host)(.*?),\s*$/gim, function($1){ return prefix+' '+$1 })        // ... ,                 -> tag ... ,
-	    .replace(/:host\((.*?)\)/gi, function($1, $2){ return prefix+$2 })                 // :host(...)            -> tag...
-	    .replace(/:host([ ,])/gi, function($1, $2){ return prefix+$2 })                                                 // :host ...             -> tag ...
-	    .replace(/^.*:host-context\((.*)\)/gim, function($1, $2){ return $2+' ' +prefix }) // ... :host-context(..) -> ... tag..
-	};
-
-	var sel = function (s) { return document.querySelector(s); };
-
-	var style = function(node, styles, hashed, name){
-	  if ( hashed === void 0 ) hashed = djbx(styles);
-	  if ( name === void 0 ) name = hashed;
-
-	  var style = sel(("style[name=\"" + name + "\"]"));
-	  if (!style) {
-	    style = document.createElement('style');
-	    style.setAttribute('name', name);
-	    document.head.appendChild(style);
-	  }
-
-	  if (style.hash != hashed) {
-	    style.innerHTML = cssscope(styles, ("[stylesheet~=\"" + name + "\"]"));
-	    style.hash = hashed;
-	  }
-
-	  node.css = node.css || {};
-	  node.css[name] = 1;
-	  node.setAttribute('stylesheet', Object.keys(node.css).join(' '));
-	  node.on('disconnected.css', function () {
-	    if (!sel(("[stylesheet~=\"" + name + "\"]")) && sel(("style[name=\"" + name + "\"]")))
-	      { sel(("style[name=\"" + name + "\"]")).remove(); }
-	  });
-	};
-
-	var event = function event(node, index) {
-	  node = node.host && node.host.nodeName ? node.host : node;
-	  if (node.on) { return }
-	  node.listeners = {};
-
-	  var on = function (o) {
-	    var type = o.type.split('.').shift();
-	    if (!node.listeners[type])
-	      { node.addEventListener(type, node.listeners[type] = 
-	        function (event) { return (!event.detail || !event.detail.emitted ? emit(type, [event, node.state, node]) : 0); }
-	      ); }
-	  };
-
-	  var off = function (o) {
-	    if (!node.on[o.type] || !node.on[o.type].length) {
-	      node.removeEventListener(o.type, node.listeners[o.type]);
-	      delete node.listeners[o.type];
-	    }
-	  };
-
-	  emitterify(node, { on: on, off: off });
-	  var emit = node.emit;
-
-	  node.emit = function(type, params){
-	    var detail = { params: params, emitted: true }
-	        , event = new CustomEvent(type, { detail: detail, bubbles: false, cancelable: true });
-	    node.dispatchEvent(event);
-	    return emit(type, event)
-	  };
-	};
-
-	var HTMLElement$1 = client && window.HTMLElement || class {}
-	    , registry = client && window.customElements || {};
-
-	registry.anon = registry.anon || 1;
-
 	var rijs_components = function components(ripple){
 	  if (!client) { return ripple }
 	  log$6('creating');
-
-
-	var styler =  function (node) {
-	  var names = [], len = arguments.length - 1;
-	  while ( len-- > 0 ) names[ len ] = arguments[ len + 1 ];
-
-	  return __async(function*(){
-	  return node.css$ = node.css$ || ripple
-	  .subscribe(names)
-	  .map(function (styles) { return names.map(function (name) { return style(node, styles[name], ripple.resources[name].headers.hash, name); }); })
-	  .each(function (d, i, n) { return requestAnimationFrame(n.next); })
-	  .start(node.on('disconnected').filter(function () { return !node.isConnected; })) // TODO: test needed
-	}());
-	  };
-
-	var data = function (node) {
-	  var names = [], len = arguments.length - 1;
-	  while ( len-- > 0 ) names[ len ] = arguments[ len + 1 ];
-
-	  return __async(function*(){
-	  if (!node.data$) { node.data$ = ripple
-	    .subscribe(names)
-	    .map(function (data) { return assign$2(node.state, data); })
-	    .map(function () { return node.render(); })
-	    .start(node.once('disconnected')); }
-
-	  return ripple.get(names)
-	}());
-	  };
 
 	  // if no render is defined on a component, load up definition
 	  Node.prototype.render = function(){
@@ -1336,43 +1235,13 @@ var rijs = (function () {
 	      this.state = this.state || {};
 	      return this.fn$ = this.fn$ || ripple
 	        .subscribe(name)
-	        .map(function (component) {
-	          var cls = customElements.define(name, class extends HTMLElement{
-
-	              constructor(){
-	                super();
-	                event(this);
-	              }
-
-	             static get observedAttributes() {
-	                 return ['data', 'css']
-	              }
-
-
-	              attributeChangedCallback(name, oldValue, newValue) {
-	                name == 'css'
-	                ? styler.apply(void 0, [ this ].concat( newValue.split(' ') ))
-	                : data.apply(void 0, [ this ].concat( newValue.split(' ') ));
-	                
-	              }
-
-	              connectedCallback(){
-	                this.render();
-	              }
-
-	              render(){
-	                component.call(this, this, this.state);
-	              }
-
-	          });
-	            
-	        })
-	          // TODO: test this works well across all instances
-	          // .until(new Promise(resolve => this.addEventListener('disconnected', () => {
-	          //   if (!this.isConnected) resolve()
-	          // })))
-	      }
-	    };
+	        .map(function (component) { return define(name, component); })
+	        // TODO: test this works well across all instances
+	        // .until(new Promise(resolve => this.addEventListener('disconnected', () => {
+	        //   if (!this.isConnected) resolve()
+	        // })))
+	    }
+	  };
 	  
 	  // this is for backwards compatibility
 	  Node.prototype.draw = function(){ 
@@ -1388,7 +1257,6 @@ var rijs = (function () {
 	};
 
 	var log$6 = log('[ri/components]');
-	var assign$2 = Object.assign;
 
 	var ripple = createCommonjsModule(function (module) {
 	function create(opts) {
@@ -1403,4 +1271,4 @@ var rijs = (function () {
 
 	return ripple;
 
-}());
+}(define));
